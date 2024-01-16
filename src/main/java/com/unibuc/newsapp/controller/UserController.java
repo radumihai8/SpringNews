@@ -2,6 +2,7 @@ package com.unibuc.newsapp.controller;
 
 import com.unibuc.newsapp.dto.AuthResponse;
 import com.unibuc.newsapp.dto.LoginRequest;
+import com.unibuc.newsapp.entity.Role;
 import com.unibuc.newsapp.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,8 +34,11 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
         User authenticatedUser = userService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
+        //get user role by role id
+        Role role = authenticatedUser.getRole();
+
         if (authenticatedUser != null) {
-            String token = JwtUtil.generateToken(authenticatedUser.getUsername());
+            String token = JwtUtil.generateToken(authenticatedUser.getUsername(), role.getName());
             return ResponseEntity.ok(new AuthResponse("User authenticated", token));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Authentication failed"));
