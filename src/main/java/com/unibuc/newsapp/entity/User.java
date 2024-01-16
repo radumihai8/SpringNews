@@ -2,7 +2,6 @@ package com.unibuc.newsapp.entity;
 
 import jakarta.persistence.*;
 
-
 @Entity
 @Table(name = "users")
 public class User {
@@ -17,29 +16,26 @@ public class User {
 
     private String password;
 
-    @Column(name = "is_admin")
-    private boolean isAdmin;
-
-
-
-    // Getters and setters
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
     public User() {
     }
 
-    public User(String username, String email, String password, boolean isAdmin) {
+    public User(String username, String email, String password, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.isAdmin = isAdmin;
+        this.role = role;
     }
 
-    public User(Long id, String username, String email, String password, boolean isAdmin) {
+    public User(Long id, String username, String email, String password, Role role) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.isAdmin = isAdmin;
+        this.role = role;
     }
 
     public Long getId() {
@@ -58,8 +54,8 @@ public class User {
         return password;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
+    public Role getRole() {
+        return role;
     }
 
     public void setId(Long id) {
@@ -75,11 +71,10 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password= password;
+        this.password = password;
     }
 
-    public void setAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
+    public void setRole(Role role) {
+        this.role = role;
     }
-
 }
