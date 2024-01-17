@@ -1,5 +1,6 @@
 package com.unibuc.newsapp.controller;
 
+import com.unibuc.newsapp.exceptions.ResourceNotFoundException;
 import com.unibuc.newsapp.dto.CategoryDTO;
 import com.unibuc.newsapp.entity.Category;
 import com.unibuc.newsapp.service.CategoryService;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -27,7 +27,7 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
         Category category = categoryService.getCategoryById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         CategoryDTO categoryDTO = convertToDTO(category);
         return ResponseEntity.ok(categoryDTO);
     }

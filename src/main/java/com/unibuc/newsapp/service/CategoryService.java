@@ -1,5 +1,6 @@
 package com.unibuc.newsapp.service;
 
+import com.unibuc.newsapp.exceptions.ResourceNotFoundException;
 import com.unibuc.newsapp.entity.Category;
 import com.unibuc.newsapp.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class CategoryService {
 
     public Category updateCategory(Long id, Category categoryDetails) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         category.setName(categoryDetails.getName());
         return categoryRepository.save(category);
     }

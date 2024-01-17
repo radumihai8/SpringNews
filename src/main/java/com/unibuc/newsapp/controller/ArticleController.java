@@ -1,5 +1,6 @@
 package com.unibuc.newsapp.controller;
 
+import com.unibuc.newsapp.exceptions.ResourceNotFoundException;
 import com.unibuc.newsapp.dto.ArticleDTO;
 import com.unibuc.newsapp.entity.Article;
 import com.unibuc.newsapp.service.ArticleService;
@@ -43,7 +44,7 @@ public class ArticleController {
     @GetMapping("/{id}")
     public ResponseEntity<ArticleDTO> getArticleById(@PathVariable Long id) {
         Article article = articleService.getArticleById(id)
-                .orElseThrow(() -> new RuntimeException("Article not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
         ArticleDTO articleDTO = convertToDTO(article);
         return ResponseEntity.ok(articleDTO);
     }

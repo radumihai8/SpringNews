@@ -1,5 +1,6 @@
 package com.unibuc.newsapp.service;
 
+import com.unibuc.newsapp.exceptions.ResourceNotFoundException;
 import com.unibuc.newsapp.dto.ArticleDTO;
 import com.unibuc.newsapp.entity.Article;
 import com.unibuc.newsapp.entity.ArticleCategory;
@@ -39,7 +40,7 @@ public class ArticleService {
         Set<ArticleCategory> articleCategories = new HashSet<>();
         for (Long categoryId : articleDTO.getCategoryIds()) {
             Category category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
             ArticleCategory articleCategory = new ArticleCategory();
             articleCategory.setArticle(article);
             articleCategory.setCategory(category);
@@ -54,7 +55,7 @@ public class ArticleService {
     @Transactional
     public Article updateArticle(Long id, ArticleDTO articleDTO) {
         Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Article not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
         article.setTitle(articleDTO.getTitle());
         article.setContent(articleDTO.getContent());
         article.setPublishDate(articleDTO.getPublishDate());
@@ -63,7 +64,7 @@ public class ArticleService {
         article.getArticleCategories().clear();
         for (Long categoryId : articleDTO.getCategoryIds()) {
             Category category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
             ArticleCategory articleCategory = new ArticleCategory();
             articleCategory.setArticle(article);
             articleCategory.setCategory(category);

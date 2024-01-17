@@ -1,5 +1,6 @@
 package com.unibuc.newsapp.controller;
 
+import com.unibuc.newsapp.exceptions.ResourceNotFoundException;
 import com.unibuc.newsapp.dto.CommentDTO;
 import com.unibuc.newsapp.entity.Comment;
 import com.unibuc.newsapp.entity.User;
@@ -59,7 +60,7 @@ public class CommentController {
     @GetMapping("/read/{commentId}")
     public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long commentId) {
         CommentDTO comment = commentService.getCommentById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
 
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }

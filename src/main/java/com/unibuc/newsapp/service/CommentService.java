@@ -1,8 +1,8 @@
 package com.unibuc.newsapp.service;
 
+import com.unibuc.newsapp.exceptions.ResourceNotFoundException;
 import com.unibuc.newsapp.controller.CommentController;
 import com.unibuc.newsapp.dto.CommentDTO;
-import com.unibuc.newsapp.entity.Article;
 import com.unibuc.newsapp.entity.Comment;
 import com.unibuc.newsapp.entity.User;
 import com.unibuc.newsapp.repository.ArticleRepository;
@@ -29,7 +29,7 @@ public class CommentService {
         logger.info("User: " + user);
         logger.info("ArticleId: " + articleId);
         comment.setArticle(articleRepository.findById(articleId)
-                .orElseThrow(() -> new RuntimeException("Article not found")));
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found")));
         comment.setUser(user);
         Comment savedComment = commentRepository.save(comment);
         return convertToDTO(savedComment);
@@ -37,7 +37,7 @@ public class CommentService {
 
     public Optional<CommentDTO> getCommentById(Long id) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
 
         return Optional.of(convertToDTO(comment));
     }
@@ -48,7 +48,7 @@ public class CommentService {
 
     public CommentDTO updateComment(Long id, CommentDTO commentDTO, User currentUser) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
 
         if (!comment.getUser().equals(currentUser)) {
             throw new RuntimeException("Unauthorized to edit this comment");
@@ -61,7 +61,7 @@ public class CommentService {
 
     public void deleteComment(Long id, User currentUser) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
         if (!comment.getUser().equals(currentUser)) {
             throw new RuntimeException("Unauthorized to delete this comment");
         }

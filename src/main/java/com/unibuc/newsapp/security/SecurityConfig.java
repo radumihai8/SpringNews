@@ -37,9 +37,6 @@ public class SecurityConfig {
                 .requestMatchers("/api/comments/delete/**").hasAnyRole( "USER", "ADMIN")
                 .requestMatchers("/api/comments/update/**").hasAnyRole( "USER", "ADMIN")
                 .requestMatchers("/api/comments/**").permitAll()
-
-
-
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
