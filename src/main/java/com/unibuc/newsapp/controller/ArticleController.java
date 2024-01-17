@@ -1,8 +1,10 @@
 package com.unibuc.newsapp.controller;
 
+import com.unibuc.newsapp.dto.ArticleDTO;
 import com.unibuc.newsapp.entity.Article;
 import com.unibuc.newsapp.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +21,17 @@ public class ArticleController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Article> createArticle(@RequestBody Article article) {
-        return ResponseEntity.ok(articleService.createArticle(article));
-    }
+    public ResponseEntity<ArticleDTO> createArticle(@RequestBody ArticleDTO articleDTO) {
+        Article createdArticle = articleService.createArticle(articleDTO);
+        ArticleDTO createdArticleDTO = convertToDTO(createdArticle);
 
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdArticleDTO);
+    }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Article> updateArticle(@PathVariable Long id, @RequestBody Article articleDetails) {
-        return ResponseEntity.ok(articleService.updateArticle(id, articleDetails));
+    public ResponseEntity<ArticleDTO> updateArticle(@PathVariable Long id, @RequestBody ArticleDTO articleDTO) {
+        Article updatedArticle = articleService.updateArticle(id, articleDTO);
+        ArticleDTO updatedArticleDTO = convertToDTO(updatedArticle);
+        return ResponseEntity.ok(updatedArticleDTO);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -35,14 +41,34 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Article> getArticleById(@PathVariable Long id) {
+    public ResponseEntity<ArticleDTO> getArticleById(@PathVariable Long id) {
         Article article = articleService.getArticleById(id)
                 .orElseThrow(() -> new RuntimeException("Article not found"));
-        return ResponseEntity.ok(article);
+        ArticleDTO articleDTO = convertToDTO(article);
+        return ResponseEntity.ok(articleDTO);
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Article>> getAllArticles() {
-        return ResponseEntity.ok(articleService.getAllArticles());
+    public ResponseEntity<List<ArticleDTO>> getAllArticles() {
+        List<Article> articles = articleService.getAllArticles();
+        List<ArticleDTO> articleDTOs = articles.stream()
+                .map(article -> convertToDTO(article))
+                .collect(java.util.stream.Collectors.toList());
+        return ResponseEntity.ok(articleDTOs);
+    }
+
+    private ArticleDTO convertToDTO(Article article) {
+        ArticleDTO articleDTO = new ArticleDTO();
+        articleDTO.setId(article.getId());
+        articleDTO.setTitle(article.getTitle());
+        articleDTO.setContent(article.getContent());
+        articleDTO.setPublishDate(article.getPublishDate());
+
+        //set category ids
+        articleDTO.setCategoryIds(article.getArticleCategories().stream()
+                .map(articleCategory -> articleCategory.getCategory().getId())
+                .collect(java.util.stream.Collectors.toSet()));
+
+        return articleDTO;
     }
 }

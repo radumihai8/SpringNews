@@ -2,6 +2,7 @@ package com.unibuc.newsapp.entity;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "articles")
@@ -19,7 +20,10 @@ public class Article {
     @Temporal(TemporalType.TIMESTAMP)
     private Date publishDate = new Date();
 
-    //constructors
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ArticleCategory> articleCategories;
+
+    // Constructors
     public Article() {
     }
 
@@ -29,43 +33,46 @@ public class Article {
         this.publishDate = new Date();
     }
 
-    //getters
-
+    // Getters and Setters
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public Date getPublishDate() {
-        return publishDate;
-    }
-
-    //setters
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     public void setContent(String content) {
         this.content = content;
     }
 
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
     public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
     }
 
-    //toString
+    public Set<ArticleCategory> getArticleCategories() {
+        return articleCategories;
+    }
+
+    public void setArticleCategories(Set<ArticleCategory> articleCategories) {
+        this.articleCategories = articleCategories;
+    }
 
     @Override
     public String toString() {
@@ -76,6 +83,4 @@ public class Article {
                 ", publishDate=" + publishDate +
                 '}';
     }
-
-
 }

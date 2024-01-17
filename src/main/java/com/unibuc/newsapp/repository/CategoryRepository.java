@@ -1,9 +1,9 @@
 package com.unibuc.newsapp.repository;
 
-import com.unibuc.newsapp.entity.Article;
+import com.unibuc.newsapp.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ArticleRepository extends JpaRepository<Article, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 }
