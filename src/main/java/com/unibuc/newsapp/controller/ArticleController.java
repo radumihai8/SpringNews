@@ -1,9 +1,11 @@
 package com.unibuc.newsapp.controller;
 
+import com.unibuc.newsapp.dto.CreateArticleDTO;
 import com.unibuc.newsapp.exceptions.ResourceNotFoundException;
 import com.unibuc.newsapp.dto.ArticleDTO;
 import com.unibuc.newsapp.entity.Article;
 import com.unibuc.newsapp.service.ArticleService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/articles")
+@SecurityRequirement(name = "Bearer")
 public class ArticleController {
 
     @Autowired
@@ -22,15 +25,19 @@ public class ArticleController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<ArticleDTO> createArticle(@RequestBody ArticleDTO articleDTO) {
+    public ResponseEntity<ArticleDTO> createArticle(@RequestBody CreateArticleDTO articleDTO) {
         Article createdArticle = articleService.createArticle(articleDTO);
         ArticleDTO createdArticleDTO = convertToDTO(createdArticle);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdArticleDTO);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<ArticleDTO> updateArticle(@PathVariable Long id, @RequestBody ArticleDTO articleDTO) {
+    public ResponseEntity<ArticleDTO> updateArticle(@PathVariable Long id, @RequestBody CreateArticleDTO articleDTO) {
         Article updatedArticle = articleService.updateArticle(id, articleDTO);
+        articleDTO.setContent(articleDTO.getContent());
+        articleDTO.setTitle(articleDTO.getTitle());
+        articleDTO.setCategoryIds(articleDTO.getCategoryIds());
+
         ArticleDTO updatedArticleDTO = convertToDTO(updatedArticle);
         return ResponseEntity.ok(updatedArticleDTO);
     }

@@ -4,6 +4,7 @@ import com.unibuc.newsapp.exceptions.ResourceNotFoundException;
 import com.unibuc.newsapp.dto.CategoryDTO;
 import com.unibuc.newsapp.entity.Category;
 import com.unibuc.newsapp.service.CategoryService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +14,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
+@SecurityRequirement(name = "Bearer")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
     @PostMapping("/add")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> addCategory(@RequestBody String title) {
+        Category category = new Category();
+        category.setName(title);
         Category newCategory = categoryService.addCategory(category);
         return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
     }
@@ -43,7 +47,9 @@ public class CategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody String name) {
+        Category categoryDetails = new Category();
+        categoryDetails.setName(name);
         Category updatedCategory = categoryService.updateCategory(id, categoryDetails);
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }

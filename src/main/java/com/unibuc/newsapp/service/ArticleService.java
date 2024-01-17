@@ -1,5 +1,6 @@
 package com.unibuc.newsapp.service;
 
+import com.unibuc.newsapp.dto.CreateArticleDTO;
 import com.unibuc.newsapp.exceptions.ResourceNotFoundException;
 import com.unibuc.newsapp.dto.ArticleDTO;
 import com.unibuc.newsapp.entity.Article;
@@ -10,12 +11,10 @@ import com.unibuc.newsapp.repository.ArticleRepository;
 import com.unibuc.newsapp.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ArticleService {
@@ -31,11 +30,11 @@ public class ArticleService {
     private ArticleCategoryRepository articleCategoryRepository;
 
     @Transactional
-    public Article createArticle(ArticleDTO articleDTO) {
+    public Article createArticle(CreateArticleDTO articleDTO) {
         Article article = new Article();
         article.setTitle(articleDTO.getTitle());
         article.setContent(articleDTO.getContent());
-        article.setPublishDate(articleDTO.getPublishDate());
+        article.setPublishDate(new Date());
 
         Set<ArticleCategory> articleCategories = new HashSet<>();
         for (Long categoryId : articleDTO.getCategoryIds()) {
@@ -53,12 +52,11 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article updateArticle(Long id, ArticleDTO articleDTO) {
+    public Article updateArticle(Long id, CreateArticleDTO articleDTO) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
         article.setTitle(articleDTO.getTitle());
         article.setContent(articleDTO.getContent());
-        article.setPublishDate(articleDTO.getPublishDate());
 
         // Modify the existing collection
         article.getArticleCategories().clear();

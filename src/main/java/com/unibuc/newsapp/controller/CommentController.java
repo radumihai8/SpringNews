@@ -8,6 +8,7 @@ import com.unibuc.newsapp.repository.CommentRepository;
 import com.unibuc.newsapp.repository.UserRepository;
 import com.unibuc.newsapp.service.CommentService;
 import com.unibuc.newsapp.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/comments")
+@SecurityRequirement(name = "Bearer")
 public class CommentController {
 
     @Autowired
@@ -40,7 +42,7 @@ public class CommentController {
     @PostMapping("/create/{articleId}/")
     public ResponseEntity<CommentDTO> addCommentToArticle(
             @PathVariable Long articleId,
-            @RequestBody Comment comment) {
+            @RequestBody String content) {
 
         // Get the username from Security Context
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -51,6 +53,9 @@ public class CommentController {
 
         User user = userRepository.findByUsername(username);
         logger.info("User: " + user);
+
+        Comment comment = new Comment();
+        comment.setContent(content);
 
         CommentDTO newComment = commentService.addCommentToArticle(articleId, comment, user);
         return new ResponseEntity<>(newComment, HttpStatus.CREATED);
