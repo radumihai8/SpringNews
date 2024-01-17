@@ -8,7 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
     public class JwtUtil {
 
         private static final String SECRET_KEY = "asdasdas1231231das";
-        private static final long EXPIRATION_TIME = 900000; // Adjust as needed
+        private static final long EXPIRATION_TIME = 864_000_000; // 10 days
 
         public static String generateToken(String username, String role) {
             // prefix role with "ROLE_" for Spring Security

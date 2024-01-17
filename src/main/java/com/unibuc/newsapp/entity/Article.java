@@ -1,7 +1,9 @@
 package com.unibuc.newsapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -22,6 +24,10 @@ public class Article {
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ArticleCategory> articleCategories;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<Comment> comments;
 
     // Constructors
     public Article() {
@@ -83,4 +89,5 @@ public class Article {
                 ", publishDate=" + publishDate +
                 '}';
     }
+
 }

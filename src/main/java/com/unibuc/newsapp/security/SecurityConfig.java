@@ -33,6 +33,13 @@ public class SecurityConfig {
                 .requestMatchers("/api/categories/delete/**").hasAnyRole( "ADMIN")
                 .requestMatchers("/api/articles/**").permitAll()
                 .requestMatchers("/api/categories/**").permitAll()
+                .requestMatchers("/api/comments/create/**").hasAnyRole( "USER", "ADMIN")
+                .requestMatchers("/api/comments/delete/**").hasAnyRole( "USER", "ADMIN")
+                .requestMatchers("/api/comments/update/**").hasAnyRole( "USER", "ADMIN")
+                .requestMatchers("/api/comments/**").permitAll()
+
+
+
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
