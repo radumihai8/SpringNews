@@ -13,5 +13,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(StackOverflowError.class)
+    public ResponseEntity<?> handleStackOverflowError(StackOverflowError ex) {
+        String responseMessage = "A server error occurred. Please contact support.";
+        return new ResponseEntity<>(responseMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
 

@@ -98,7 +98,7 @@ public class CategoryControllerTest {
 
         when(categoryService.updateCategory(anyLong(), any(Category.class))).thenReturn(updatedCategory);
 
-        ResponseEntity<Category> response = categoryController.updateCategory(categoryId, newName);
+        ResponseEntity<CategoryDTO> response = categoryController.updateCategory(categoryId, newName);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
