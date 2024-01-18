@@ -54,3 +54,8 @@ Implements a robust authorization system for admins and regular users managing s
 ### 5. User Authorization
 
    Set up role-based access control to restrict certain actions based on user roles. Admins should have privileged access, while regular users can perform basic actions like commenting. Everyone, including guests, should be able to view articles and comments.
+
+
+## Swagger Docs
+![swagger](https://github.com/radumihai8/SpringNews/assets/17956023/6de1377d-237e-4c38-b07a-98d36c8e5fec)
+
