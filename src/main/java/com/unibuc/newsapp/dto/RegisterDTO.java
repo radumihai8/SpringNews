@@ -29,4 +29,10 @@ public class RegisterDTO {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public RegisterDTO(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }
