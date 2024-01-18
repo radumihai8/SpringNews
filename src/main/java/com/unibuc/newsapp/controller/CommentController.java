@@ -42,10 +42,11 @@ public class CommentController {
     @PostMapping("/create/{articleId}/")
     public ResponseEntity<CommentDTO> addCommentToArticle(
             @PathVariable Long articleId,
-            @RequestBody String content) {
+            @RequestBody String content,
+            Principal principal) {
 
         // Get the username from Security Context
-        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = principal.getName();
         Logger logger = Logger.getLogger(CommentController.class.getName());
         logger.info("Username: " + username);
         //print authentication object
